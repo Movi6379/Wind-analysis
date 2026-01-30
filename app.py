@@ -3,58 +3,36 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
+import os
+
+# Page configuration
 st.set_page_config(page_title="2MW Solar & Wind Analysis", layout="wide")
 st.title("☀️ 2MW Solar Plant: 7-Day Performance Dashboard")
+
+# 1. Load Data
 @st.cache_data
 def load_data():
-    df = pd.read_csv('Generation_data.csv')
+    # If your file is in the root of your GitHub, this is the name
+    file_name = 'Generation_data.csv'
+    
+    # Safety Check: If file is missing, show a helpful message
+    if not os.path.exists(file_name):
+        st.error(f"⚠️ Error: '{file_name}' not found in the repository!")
+        st.info("💡 Make sure you uploaded the CSV file (not just the zip) to your GitHub repo.")
+        st.stop()
+
+    df = pd.read_csv(file_name)
+    
+    # Recreating the missing timestamp (Assuming 5-second interval)
     df['Timestamp'] = pd.date_range(start='2024-01-01', periods=len(df), freq='5S')
+    
+    # Pre-calculations
     df['Temp_Delta'] = df['MODULE_TEMP'] - df['Amb_Temp']
+    # Calculate Efficiency (avoiding division by zero)
     df['Efficiency'] = np.where(df['IRR (W/m2)'] > 10, (df['AC Power in Watts'] / (df['IRR (W/m2)'] * 2000)), 0)
     return df
-df = load_data()
-st.sidebar.header("Filter Data")
-day_filter = st.sidebar.slider("Select Data Range (Rows)", 0, len(df), (0, 10000))
-display_df = df.iloc[day_filter[0]:day_filter[1]]
-m1, m2, m3, m4 = st.columns(4)
-m1.metric("Peak AC Power", f"{df['AC Power in Watts'].max()/1000:.2f} kW")
-m2.metric("Avg Wind Speed", f"{df['WIND_Speed'].mean():.2f} m/s")
-m3.metric("Max Module Temp", f"{df['MODULE_TEMP'].max():.1f} °C")
-m4.metric("Avg Irradiance", f"{df['IRR (W/m2)'].mean():.1f} W/m²")
-col1, col2 = st.columns(2)
-with col1:
-    st.subheader("1. Wind-Cooling Effect")
-    fig1 = px.scatter(display_df, x="WIND_Speed", y="Temp_Delta", color="MODULE_TEMP",
-                     title="Wind Speed vs. Temperature Delta (Module - Ambient)")
-    st.plotly_chart(fig1, use_container_width=True)
 
-with col2:
-    st.subheader("2. Temperature-Corrected Efficiency")
-    fig2 = px.scatter(display_df, x="MODULE_TEMP", y="Efficiency", color="IRR (W/m2)",
-                     title="Efficiency vs. Module Temperature")
-    st.plotly_chart(fig2, use_container_width=True)
-col3, col4 = st.columns(2)
-with col3:
-    st.subheader("3. 3-Phase Load Balance")
-    fig3 = go.Figure()
-    fig3.add_trace(go.Scatter(x=display_df['Timestamp'], y=display_df['AC Ir in Amps'], name='Phase R'))
-    fig3.add_trace(go.Scatter(x=display_df['Timestamp'], y=display_df['AC Iy in Amps'], name='Phase Y'))
-    fig3.add_trace(go.Scatter(x=display_df['Timestamp'], y=display_df['AC Ib in Amps'], name='Phase B'))
-    fig3.update_layout(title="3-Phase AC Current Comparison")
-    st.plotly_chart(fig3, use_container_width=True)
-with col4:
-    st.subheader("4. Solar Power Curve")
-    fig4 = px.scatter(display_df, x="IRR (W/m2)", y="AC Power in Watts", 
-                     title="Power Curve (Irradiance vs. AC Power)")
-    st.plotly_chart(fig4, use_container_width=True)
-col5, col6 = st.columns(2)
-with col5:
-    st.subheader("5. Thermal Regression Visual")
-    fig5 = px.density_heatmap(display_df, x="Amb_Temp", y="MODULE_TEMP", z="WIND_Speed",
-                             title="Heatmap: Ambient vs. Module Temp by Wind")
-    st.plotly_chart(fig5, use_container_width=True)
-with col6:
-    st.subheader("6. DC Current vs. AC Power")
-    fig6 = px.line(display_df, x="DC Current in Amps", y="AC Power in Watts",
-                  title="Inverter Performance (DC Input vs AC Output)")
-    st.plotly_chart(fig6, use_container_width=True)
+df = load_data()
+
+# --- THE REST OF YOUR CODE CONTINUES BELOW ---
+# (Keep your Sidebar, Metrics, and Study columns exactly as they were)
