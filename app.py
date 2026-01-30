@@ -6,7 +6,7 @@ import numpy as np
 
 # Page configuration
 st.set_page_config(page_title="2MW Solar & Wind Analysis", layout="wide")
-st.title("☀️ 2MW Solar Plant: 7-Day Performance Dashboard")
+st.title("")
 
 # 1. Load Data
 @st.cache_data
