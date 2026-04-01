@@ -13,7 +13,7 @@ st.title("☀️ 2MW Solar Performance & Wind-Cooling Dashboard")
 def load_data():
     df = pd.read_csv('Generation_data.csv.zip')
     # Recreating the missing timestamp (Assuming 5-second interval)
-   df['Timestamp'] = pd.date_range(start='2024-01-01', periods=len(df), freq='5s')
+    df['Timestamp'] = pd.date_range(start='2024-01-01', periods=len(df), freq='5s')
     
     # Pre-calculations
     df['Temp_Delta'] = df['MODULE_TEMP'] - df['Amb_Temp']
