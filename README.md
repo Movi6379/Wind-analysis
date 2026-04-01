@@ -1,27 +1,7 @@
-☀️ 2MW Solar Performance & Wind-Cooling Dashboard
-An interactive dashboard to analyze the efficiency and thermal health of a 2MW Solar Power Plant using high-resolution sensor data.
-
-📌 Project Overview
-This project visualizes how weather conditions—specifically Wind Speed—impact solar panel temperature and overall power generation.
-
-🔬 Key Analysis Studies
-Wind-Cooling Effect: How wind acts as a natural coolant for the panels.
-
-Efficiency vs. Temp: Measuring power loss for every degree of heat.
-
-3-Phase Load Balance: Checking if the electrical load is balanced across the grid.
-
-Solar Power Curve: Mapping Irradiance (sunlight) against AC Power output.
-
-Thermal Regression: Predicting panel temperature based on weather inputs.
-
-DC/AC Conversion: Monitoring inverter performance and conversion health.
-
-🛠️ Tech Stack
-Language: Python 3.x
-
-Dashboard: Streamlit
-
-Visuals: Plotly, Matplotlib
-
-Data: Pandas (for processing 118,000+ data points)
+Project Title: Environmental Impact Analysis on Solar Power Generation
+Problem Statement
+   Renewable energy, particularly solar power, is highly dependent on intermittent environmental factors. Traditional power grids require a steady supply, making the unpredictability of solar output a significant challenge. The goal of this project was to analyze how variables like Solar Irradiation (IRR), Ambient Temperature, and Wind Speed interact to affect the total AC Power output of a solar plant. By understanding these relationships, plant operators can better predict energy yields and identify periods of efficiency loss due to thermal overheating.
+Methodology
+   To achieve a data-driven understanding of the plant’s performance, I followed these steps:Data Preprocessing: Cleaned a dataset of over 118,000 observations, ensuring consistency across time-series intervals and handling electrical sensor data (DC/AC currents).Exploratory Data Analysis (EDA): Performed statistical analysis to determine the distribution of power generation. I found that the plant reaches peak outputs of approximately 332.6 kW.Correlation Mapping: Utilized Python’s Seaborn and Pandas libraries to build a correlation matrix. This revealed a near-perfect linear relationship (0.989) between Irradiation and Power Output.Thermal & Wind Analysis: Investigated the relationship between Module_Temp and Wind_Speed. I analyzed how the module temperature fluctuates (reaching up to 72.4 degree celcius) and the role of wind in providing natural convective cooling to the panels.Phase Load Inspection: Monitored the three-phase AC output (AC Ir, AC Iy, AC Ib) to ensure the inverter was balancing the load evenly across the grid.
+Conclusion
+   The analysis successfully quantified the drivers of solar efficiency:Primary Driver: Solar Irradiation remains the strongest predictor of power output, showing that the plant is highly optimized for peak sun hours.Efficiency Constraints: While irradiation increases power, it also drives Module_Temp to extreme levels (>70 degree celcius). Since solar cell efficiency typically drops as temperature rises, this highlights a need for better cooling or heat-resistant panel technology.Operational Health: The near-identical values across the three AC phases suggest the plant’s inverters are operating at high health with minimal phase imbalance.Actionable Insight: The data suggests that on high-wind days, module temperatures stay lower relative to irradiation levels, potentially offering a "efficiency bonus" that can be factored into future yield prediction models.
